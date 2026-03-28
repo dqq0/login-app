@@ -1,0 +1,19 @@
+# Dependencias de Node
+node_modules/
+package-lock.json
+
+# Archivos de Entorno (importante no subir contraseñas)
+.env
+
+# Archivos de configuración locales y debug
+logs/
+*.log
+
+# Entorno de Visual Studio Code u otros editores
+.vscode/
+.idea/
+*.code-workspace
+
+# Archivos del SO
+.DS_Store
+Thumbs.db

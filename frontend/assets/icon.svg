@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#05030a"/>
+  <circle cx="256" cy="256" r="150" fill="none" stroke="#00d2ff" stroke-width="20"/>
+  <path d="M 256 120 L 320 350 L 192 350 Z" fill="#9d4eff"/>
+  <text x="50%" y="450" font-family="sans-serif" font-size="50" fill="#ffffff" text-anchor="middle">DEATHCLOUD</text>
+</svg>

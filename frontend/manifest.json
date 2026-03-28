@@ -1,0 +1,17 @@
+{
+  "name": "Deathcloud Portal",
+  "short_name": "Deathcloud",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#05030a",
+  "theme_color": "#00d2ff",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./assets/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

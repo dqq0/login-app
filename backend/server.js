@@ -1,46 +1,70 @@
 const express = require('express');
-const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
-const authRoutes = require('./routes/authRoutes');
+const cors = require('cors');
 
 const app = express();
 
+// Middlewares: Permiten recibir datos y conectar desde el puerto 5500 (Live Server)
 app.use(cors());
 app.use(express.json());
 
-// Rutas
-app.use('/api', authRoutes);
-
-// 1. Crear el servidor HTTP usando Express
 const server = http.createServer(app);
 
-// 2. Inicializar Socket.io adjuntándolo al servidor HTTP
+// Configuración de WebSockets
 const io = new Server(server, {
   cors: {
-    origin: "*", // Permite conexiones desde cualquier origen (PC o Android)
+    origin: "*", 
     methods: ["GET", "POST"]
   }
 });
 
-// 3. Configurar los eventos principales del WebSocket
-io.on("connection", (socket) => {
-  console.log("🟢 Nuevo dispositivo conectado. ID:", socket.id);
+// --- RUTA DE PRUEBA ---
+app.get('/', (req, res) => {
+  res.send(`
+    <body style="background: #09090b; color: #00d2ff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+      <h1>🚀 SERVIDOR DEATHCLOUD ACTIVO</h1>
+      <p style="color: #fff; opacity: 0.8;">El backend está escuchando en el puerto 3000</p>
+      <div style="border: 1px solid #00d2ff; padding: 10px; border-radius: 5px;">Socket.io: ONLINE</div>
+    </body>
+  `);
+});
 
-  // Escuchar evento de recibir mensaje desde PC o Android
-  socket.on("enviar_mensaje", (data) => {
-    console.log("✉️ Mensaje recibido en el servidor:", data);
-    
-    // Retransmitir el mensaje a TODOS los demás dispositivos conectados (Android/PC)
-    io.emit("nuevo_mensaje", data);
+// --- LÓGICA DEL CHAT (WebSockets - TU TRABAJO) ---
+io.on('connection', (socket) => {
+  console.log('🟢 Nuevo Piloto detectado en la red');
+
+  socket.on('enviar_mensaje', (data) => {
+    console.log(`✉️ Transmisión de [${data.usuario}]: ${data.texto}`);
+    io.emit('recibir_mensaje', data);
   });
 
-  // Evento cuando un usuario cierra la pestaña o la app
-  socket.on("disconnect", () => {
-    console.log("🔴 Dispositivo desconectado. ID:", socket.id);
+  socket.on('disconnect', () => {
+    console.log('🔴 Piloto fuera de rango (Desconectado)');
+  });
+});
+
+// --- RUTA DE REGISTRO (Agregada para que pases la pantalla) ---
+app.post('/api/register', (req, res) => {
+  const { email } = req.body;
+  console.log(`📝 Nuevo registro simulado: ${email}`);
+  res.json({ success: true, message: "Usuario registrado correctamente" });
+});
+
+// --- RUTA DE LOGIN ---
+app.post('/api/login', (req, res) => {
+  const { email } = req.body;
+  console.log(`🔑 Intento de acceso: ${email}`);
+  res.json({ 
+    success: true, 
+    message: "Acceso concedido",
+    username: email.split('@')[0] 
   });
 });
 
 const PORT = 3000;
-// IMPORTANTE: Ahora usamos server.listen en lugar de app.listen
-server.listen(PORT, () => console.log(`✅ Servidor y WebSockets corriendo en http://localhost:${PORT}`));
+server.listen(PORT, () => {
+  console.log('-------------------------------------------');
+  console.log(`🚀 BACKEND CORRIENDO: http://localhost:${PORT}`);
+  console.log('-------------------------------------------');
+});

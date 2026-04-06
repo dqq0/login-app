@@ -58,7 +58,8 @@ app.post('/api/login', (req, res) => {
   res.json({ 
     success: true, 
     message: "Acceso concedido",
-    username: email.split('@')[0] 
+    username: email.split('@')[0],
+    token: "token-simulado-12345"
   });
 });
 

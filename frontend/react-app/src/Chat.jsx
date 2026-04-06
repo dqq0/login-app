@@ -13,7 +13,7 @@ const Chat = ({ onLogout }) => {
     setSocket(newSocket);
 
     // 2. Escuchar evento desde el Backend cuando se retransmite un mensaje (de PC o Android)
-    newSocket.on('nuevo_mensaje', (data) => {
+    newSocket.on('recibir_mensaje', (data) => {
       // Tomamos el array de mensajes antiguos y le agregamos el nuevo
       setMensajes((prevMensajes) => [...prevMensajes, data]);
     });
@@ -27,7 +27,8 @@ const Chat = ({ onLogout }) => {
     // Validar que no manden vacío
     if (mensaje.trim() !== '' && socket) {
       // 4. Emitir el mensaje al Backend
-      socket.emit('enviar_mensaje', mensaje);
+      const usuario = localStorage.getItem('username') || 'Piloto Web';
+      socket.emit('enviar_mensaje', { usuario: usuario, texto: mensaje });
       setMensaje(''); // Limpiar el input después de enviar
     }
   };
@@ -45,7 +46,7 @@ const Chat = ({ onLogout }) => {
         <div className="chat-messages">
           {mensajes.map((msg, index) => (
             <div key={index} className="chat-message">
-              {msg}
+              <strong>[{msg.usuario || 'Desconocido'}]:</strong> {msg.texto || msg}
             </div>
           ))}
           {mensajes.length === 0 && <p style={{ color: '#888', textAlign: 'center', marginTop: '100px' }}>Red vacía. Transmisión a la espera...</p>}

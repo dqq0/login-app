@@ -1,7 +1,7 @@
 const { useState, useEffect } = React;
 
 // 1. Iniciamos la conexión del WebSocket apuntando al backend
-const socket = io('http://localhost:3000'); 
+const socket = io('http://10.0.2.2:3000'); 
 
 // --- COMPONENTE DEL CHAT (Se muestra después del Login) ---
 const ChatScreen = ({ username }) => {
@@ -101,7 +101,7 @@ const App = () => {
         setStatus({ msg: isRegister ? 'INICIALIZANDO REGISTRO...' : 'AUTENTICANDO...', type: 'loading' });
         
         try {
-            const url = isRegister ? 'http://localhost:3000/api/register' : 'http://localhost:3000/api/login';
+            const url = isRegister ? 'http://10.0.2.2:3000/api/register' : 'http://10.0.2.2:3000/api/login';
             const body = isRegister ? { nombre, email, password } : { email, password };
 
             const response = await fetch(url, {

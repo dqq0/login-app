@@ -1,34 +1,35 @@
-# Guía de Migración de Deathcloud a Android Studio
+# Guía de Uso: Configuración de Proyecto Web en Android Studio
 
-Ahora que ya clonamos los últimos cambios con los WebSockets y el Chat, el siguiente paso es migrar el proyecto y lograr que la app ejecute el frontend en Android Studio conectándose a tu servidor NodeJS.
+Esta guía detalla los pasos necesarios para encapsular un frontend web (HTML/JS/React) dentro de una aplicación nativa en Android Studio y conectarla con un servidor backend (como Node.js).
 
-## 1. El Problema de `localhost` en Android
+## 1. Configuración de IP (`localhost` vs Emulador)
+
 > [!WARNING]
-> En Android Studio, si usas el Emulador Oficial, `localhost` apunta al teléfono virtual mismo, no a tu computadora.
-> Por lo tanto, el emulador **no encontrará tu servidor NodeJS en localhost:3000**.
+> En Android Studio, si se utiliza el Emulador Oficial de Android, la dirección `localhost` o `127.0.0.1` apunta a la red interna del propio dispositivo virtual, no a la red de la computadora que ejecuta el servidor.
 
-Para solucionarlo, debes cambiar en `frontend/js/login.js` todas las menciones que digan `http://localhost:3000` por la IP especial del emulador: **`http://10.0.2.2:3000`**. 
+Para que el emulador pueda conectarse correctamente al backend alojado en el equipo de desarrollo, se debe reemplazar cualquier mención de `http://localhost:3000` (o el puerto correspondiente) por la IP especial del emulador: **`http://10.0.2.2:3000`**.
 
-*Si vas a probar usando un teléfono android real por USB/WiFi en lugar del emulador, debes poner la IP de tu computadora en la red Wi-Fi (ej. `http://192.168.1.15:3000`).*
+*Si la prueba se realiza en un dispositivo físico conectado a través de USB o Wi-Fi, se debe utilizar la dirección IP local de la computadora en la red Wi-Fi (ejemplo: `http://192.168.1.15:3000`).*
 
-## 2. Preparar el Proyecto en Android Studio
+## 2. Preparación del Directorio de la App (WebView)
 
-Una forma rápida de encapsular un "Frontend web" en una app de Android es usando un componente llamado `WebView`. 
+El método más directo para integrar el frontend web en Android es mediante el componente `WebView`.
 
-1. Abre **Android Studio** y crea un nuevo proyecto ("Empty Views Activity").
-2. En la carpeta del proyecto, ve a `app/src/main/` y crea una carpeta llamada `assets`. 
-3. **Copia toda tu carpeta `frontend/`** dentro de esta nueva carpeta `assets/`. De forma que quede: `app/src/main/assets/frontend/index.html`.
+1. Abrir **Android Studio** y crear un nuevo proyecto seleccionando **Empty Views Activity**.
+2. En la estructura del proyecto, navegar hasta `app/src/main/` y crear una nueva carpeta denominada `assets`.
+3. **Copiar toda la carpeta del proyecto frontend** (ej: `frontend/`) al interior de la nueva carpeta `assets/`.
+   - La estructura final deberá verse similar a: `app/src/main/assets/frontend/index.html`.
 
-## 3. Configurar Android Manifest
+## 3. Configuración del Android Manifest
 
-Tu aplicación va a necesitar permisos de Internet para acceder a los WebSockets y conectarse al Node.js, así como permisos para páginas web locales en texto plano (HTTP clásico sin HTTPS).
+La aplicación requiere permisos para conectarse a Internet (WebSockets, llamados API REST, etc.) y permisos para la transmisión de tráfico en texto plano si se está usando HTTP en desarrollo (en lugar de HTTPS).
 
-Abre `app/src/main/AndroidManifest.xml` y agrega lo siguiente:
+Abrir el archivo `app/src/main/AndroidManifest.xml` y agregar los siguientes parámetros:
 
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- 1. PEDIR PERMISO DE INTERNET -->
+    <!-- 1. SOLICITUD DE PERMISOS DE RED E INTERNET -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -39,7 +40,7 @@ Abre `app/src/main/AndroidManifest.xml` y agrega lo siguiente:
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Deathcloud"
-        android:usesCleartextTraffic="true"> <!-- 2. HABILITAR TRAFICO HTTP (NO HTTPS) -->
+        android:usesCleartextTraffic="true"> <!-- 2. HABILITAR TRÁFICO HTTP -->
         
         <activity android:name=".MainActivity" ... >
             <!-- ... -->
@@ -48,13 +49,13 @@ Abre `app/src/main/AndroidManifest.xml` y agrega lo siguiente:
 </manifest>
 ```
 
-## 4. Código del WebView en Kotlin/Java
+## 4. Inicialización del WebView en Kotlin/Java
 
-Finalmente, en el archivo principal `MainActivity.kt` (o `.java`), configurarás tu app para que lea el `index.html` e inicialice Javascript y WebSockets.
+Finalmente, en el archivo principal de la actividad (usualmente `MainActivity.kt` o `.java`), se configura la Vista Web para cargar el archivo `index.html` y habilitar el uso de JavaScript.
 
-**Si usas Kotlin (`MainActivity.kt`):**
+**Ejemplo de implementación en Kotlin (`MainActivity.kt`):**
 ```kotlin
-package com.example.deathcloud
+package com.example.deathcloud // Asegurarse de que coincida con el nombre de paquete real
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -68,30 +69,30 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Creamos la pantalla Web
+        // Instanciar el componente WebView
         val myWebView = WebView(this)
         setContentView(myWebView)
 
-        // Activamos configuraciones extremadamente importantes para React, WebSockets y CORS local
+        // Ajustar la configuración para permitir React, LocalStorage y CORS Local
         val webSettings: WebSettings = myWebView.settings
         webSettings.javaScriptEnabled = true
-        webSettings.domStorageEnabled = true // Requerido para React
+        webSettings.domStorageEnabled = true // Necesario para guardar tokens y almacenamiento web
         
-        // Habilitar acceso a scripts locales (Babel/React)
+        // Habilitar la lectura de archivos JS estáticos (Babel/React)
         webSettings.allowFileAccess = true
         webSettings.allowFileAccessFromFileURLs = true
         webSettings.allowUniversalAccessFromFileURLs = true
         
         myWebView.webViewClient = WebViewClient()
 
-        // Cargamos tu HTML desde la carpeta local assets
-        myWebView.loadUrl("file:///android_asset/index.html")
+        // Ejecutar el frontend integrado, ajustando la ruta a la estructura de la carpeta copiada
+        myWebView.loadUrl("file:///android_asset/frontend/index.html")
     }
 }
 ```
 
-## Resumen de pasos:
-1. Recuerda arrancar tu backend node en la PC (`npm start`).
-2. Cambia `localhost` por `10.0.2.2` en tu JS.
-3. Mete tu front al `assets` de Android Studio.
-4. Dale permisos de internet y usa WebView con `javaScriptEnabled`.
+## Resumen de Despliegue:
+1. Iniciar el servicio/backend en la computadora de desarrollo (p. ej. `npm start`).
+2. Actualizar las direcciones URL apuntando a las APIs de `localhost` hacia `10.0.2.2` u otra IP de red aplicable.
+3. Trasladar el código fuente/frontend de producción consolidado al directorio `assets` de Android Studio.
+4. Aplicar permisos en red al `AndroidManifest.xml` y activar el uso explícito de JavaScript en el WebView.

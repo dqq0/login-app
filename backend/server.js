@@ -31,12 +31,44 @@ app.get('/', (req, res) => {
 });
 
 // --- LÓGICA DEL CHAT (WebSockets - TU TRABAJO) ---
-io.on('connection', (socket) => {
+const pool = require('./config/db');
+
+// Iniciamos la tabla por si no existe
+pool.query(`
+  CREATE TABLE IF NOT EXISTS mensajes (
+    id SERIAL PRIMARY KEY,
+    usuario VARCHAR(100) NOT NULL,
+    texto TEXT NOT NULL,
+    hora VARCHAR(50) NOT NULL
+  )
+`).then(() => console.log('📦 Tabla de mensajes verificada en la BD'))
+  .catch(err => console.error('❌ Error verificando la tabla de mensajes:', err));
+
+io.on('connection', async (socket) => {
   console.log('🟢 Nuevo Piloto detectado en la red');
 
-  socket.on('enviar_mensaje', (data) => {
+  // Recuperar historial de la base de datos y mandarlo al cliente
+  try {
+    const result = await pool.query('SELECT usuario, texto, hora FROM mensajes ORDER BY id ASC LIMIT 100');
+    socket.emit('historial_mensajes', result.rows);
+  } catch (err) {
+    console.error('Error al obtener el historial de mensajes:', err);
+  }
+
+  socket.on('enviar_mensaje', async (data) => {
     console.log(`✉️ Transmisión de [${data.usuario}]: ${data.texto}`);
-    io.emit('recibir_mensaje', data);
+    
+    // Guardar el mensaje en la base de datos
+    try {
+      await pool.query(
+        'INSERT INTO mensajes (usuario, texto, hora) VALUES ($1, $2, $3)',
+        [data.usuario, data.texto, data.hora]
+      );
+      // Emitir el mensaje al resto (o a todos)
+      io.emit('recibir_mensaje', data);
+    } catch (err) {
+      console.error('Error al guardar en la base de datos:', err);
+    }
   });
 
   socket.on('disconnect', () => {

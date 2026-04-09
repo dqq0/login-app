@@ -9,6 +9,11 @@ const ChatScreen = ({ username }) => {
     const [nuevoMensaje, setNuevoMensaje] = useState('');
 
     useEffect(() => {
+        // Cargar el historial que llega desde la base de datos al conectarse
+        socket.on('historial_mensajes', (historial) => {
+            setMensajes(historial);
+        });
+
         // Escuchar cuando el servidor nos manda un mensaje nuevo
         socket.on('recibir_mensaje', (data) => {
             setMensajes((prevMensajes) => [...prevMensajes, data]);
@@ -16,6 +21,7 @@ const ChatScreen = ({ username }) => {
 
         // Limpieza al desmontar
         return () => {
+            socket.off('historial_mensajes');
             socket.off('recibir_mensaje');
         };
     }, []);

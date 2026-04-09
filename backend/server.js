@@ -62,7 +62,7 @@ io.on('connection', async (socket) => {
     try {
       await pool.query(
         'INSERT INTO mensajes (usuario, texto, hora) VALUES ($1, $2, $3)',
-        [data.usuario, data.texto, data.hora]
+        [data.usuario, data.texto, data.hora || new Date().toLocaleTimeString()]
       );
       // Emitir el mensaje al resto (o a todos)
       io.emit('recibir_mensaje', data);

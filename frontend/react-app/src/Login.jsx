@@ -28,6 +28,9 @@ const Login = ({ onLoginSuccess }) => {
       // Paso 3: Guardar la llave
       if (data.token) {
         localStorage.setItem('jwt_token', data.token);
+        if (data.username) {
+          localStorage.setItem('username', data.username);
+        }
         
         // Notificar a React que el login fue un éxito, para que esconda y ponga el Chat
         onLoginSuccess();

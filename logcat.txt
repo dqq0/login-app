@@ -1,0 +1,112 @@
+--------- beginning of main
+04-05 22:05:14.488 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.488 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.490 13080 13118 I Finsky  : [56] Current account updated in PVS
+04-05 22:05:14.491 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.492 13080 13118 I Finsky  : [56] Current account updated in PVS
+04-05 22:05:14.493 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.494 13080 13118 I Finsky  : [56] Current account updated in PVS
+04-05 22:05:14.495 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.495 13080 13118 I Finsky  : [56] Current account updated in PVS
+04-05 22:05:14.510 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.511 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.512 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.512 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.520 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.520 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.522 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.522 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.525 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.534 13080 13118 I Finsky  : [56] Current account updated in PVS
+04-05 22:05:14.542 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.542 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.543 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.543 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.543 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.550 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.551 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.551 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.552 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.555 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.555 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.555 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.570 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.571 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.571 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.572 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.572 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.573 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.575 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.575 13080 13115 I Finsky  : [53] Current account updated in PVS
+04-05 22:05:14.575 13080 13115 I Finsky  : [53] Current account updated in PVS
+04-05 22:05:14.576 13080 13115 I Finsky  : [53] Current account updated in PVS
+04-05 22:05:14.579 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.580 13080 13114 I Finsky  : [52] Current account updated in PVS
+04-05 22:05:14.582 13080 13116 I Finsky  : [54] Current account updated in PVS
+04-05 22:05:14.585 13080 13118 I Finsky  : [56] Current account updated in PVS
+04-05 22:05:14.585 13080 13118 I Finsky  : [56] Current account updated in PVS
+04-05 22:05:14.588 13080 13118 I Finsky  : [56] Current account updated in PVS
+04-05 22:05:14.591 13080 13116 I Finsky  : [54] Current account updated in PVS
+04-05 22:05:14.592 13080 13116 I Finsky  : [54] Current account updated in PVS
+04-05 22:05:14.601 13080 13118 I Finsky  : [56] Current account updated in PVS
+04-05 22:05:14.618 13080 13116 I Finsky  : [54] Current account updated in PVS
+04-05 22:05:14.619 13080 13116 I Finsky  : [54] Current account updated in PVS
+--------- beginning of system
+04-05 22:05:14.630   647   679 W ActivityManager: pid 647 system sent binder code 2 with flags 1 and got error -32
+04-05 22:05:14.630   647   679 D ActivityManager: Too many transaction errors, throttling transaction error callback.
+04-05 22:05:14.645 13080 13116 I Finsky  : [54] Current account updated in PVS
+04-05 22:05:14.656 13080 13118 I Finsky  : [56] Current account updated in PVS
+04-05 22:05:14.657 13080 13118 I Finsky  : [56] Current account updated in PVS
+04-05 22:05:14.671 13080 13118 I Finsky  : [56] Current account updated in PVS
+04-05 22:05:14.675   288   288 I lowmemorykiller: Kill 'com.android.vending' (13080), uid 10154, oom_score_adj 227 to free 185760kB rss, 33996kB swap, 0kB dmabuf_pss, 0kB dmabuf_rss; reason: low watermark is breached and swap is low (35216kB < 37744kB)
+04-05 22:05:14.691   647  1010 D ConnectivityService: releasing NetworkRequest [ REQUEST id=280, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10154 RequestorUid: 10154 RequestorPkg: com.android.vending UnderlyingNetworks: Null] ] (release request)
+04-05 22:05:14.691   647  1930 I ActivityManager: Process com.android.vending (pid 13080) has died: prcm TRNB
+04-05 22:05:14.691   647   682 I libprocessgroup: Removed cgroup /sys/fs/cgroup/apps/uid_10154/pid_13080
+04-05 22:05:14.691   446   446 I Zygote  : Process 13080 exited due to signal 9 (Killed)
+04-05 22:05:14.692   647  1010 D ConnectivityService: releasing NetworkRequest [ REQUEST id=283, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10154 RequestorUid: 10154 RequestorPkg: com.android.vending UnderlyingNetworks: Null] ] (release request)
+04-05 22:05:14.692   647  1930 W ActivityManager: Scheduling restart of crashed service com.android.vending/com.google.android.finsky.scheduler.process.mainimpl.PhoneskyJobServiceMain in 1000ms for connection
+04-05 22:05:15.333  7515  7515 D BoundBrokerSvc: onBind: Intent { act=com.google.android.gms.auth.aang.impl.deviceaccount.DeviceAccountTaskService.ACTION_TASK_READY dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.PersistentInternalBoundBrokerService }
+04-05 22:05:15.333  7515  7515 D BoundBrokerSvc: Loading bound service for intent: Intent { act=com.google.android.gms.auth.aang.impl.deviceaccount.DeviceAccountTaskService.ACTION_TASK_READY dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.PersistentInternalBoundBrokerService }
+04-05 22:05:15.339  7515  9056 I NetworkScheduler.Stats: (REDACTED) Task %s/%s started execution. cause:%s exec_start_elapsed_seconds: %s
+04-05 22:05:15.348  7515  7515 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.auth.aang.impl.deviceaccount.DeviceAccountTaskService.ACTION_TASK_READY dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.PersistentInternalBoundBrokerService }
+04-05 22:05:15.348  7515 12031 I NetworkScheduler.Stats: (REDACTED) Task %s/%s finished executing. cause:%s result: %s elapsed_millis: %s uptime_millis: %s exec_start_elapsed_seconds: %s
+04-05 22:05:16.357  1100  1100 I ClipboardListener: Clipboard overlay suppressed.
+04-05 22:05:16.360  1100  1100 I ClipboardListener: Clipboard overlay suppressed.
+04-05 22:05:16.525   647  1033 I AdbWifiNetworkMonitor: Wi-Fi network available
+04-05 22:05:16.526   647  1033 I AdbWifiNetworkMonitor: Received the same Wi-Fi SSID. Ignoring.
+04-05 22:05:16.526   647  1004 I HalDevMgr: bestIfaceCreationProposal is null, requestIface=STA, existingIface=[name=wlan0 type=STA]
+04-05 22:05:16.533  7515  8502 I NullBinder: NullBinder for android.net.action.RECOMMEND_NETWORKS triggering remote TransactionTooLargeException due to Service without Chimera impl, calling uid: 1000, calling pid: 0
+04-05 22:05:16.533  7515  8502 W libbinder.Binder: Large reply transaction of 1056768 bytes, interface descriptor , function: UNKNOWN_FUNCTION_NAME, code: 1, flags: 17
+04-05 22:05:16.797   793   805 I artd    : GetBestInfo: odex in dalvik-cache (/data/dalvik-cache/x86_64/apex@com.google.android.gmssystem@priv-app@PrebuiltGmsCoreVic@CP21.260306.017.A1@PrebuiltGmsCoreVic.apk@classes.dex) is kOatUpToDate with filter 'verify' executable 'false'
+04-05 22:05:16.798   793   805 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/00000001/CronetDynamite.apk has no usable artifacts
+04-05 22:05:16.803   793   805 I artd    : GetBestInfo: vdex next to the dex file (/data/user/0/com.google.android.gms/app_dg_cache/BB2AE5A47BB198AF36C19CFD2B6407061A1BAF30/oat/x86_64/the.vdex) is kOatUpToDate with filter 'verify' executable 'false'
+04-05 22:05:16.803   793   805 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/00000002/DynamiteLoader.apk has no usable artifacts
+04-05 22:05:16.804   793   805 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/00000005/GoogleCertificates.apk has no usable artifacts
+04-05 22:05:16.806   793   805 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/00000007/MeasurementDynamite.apk has no usable artifacts
+04-05 22:05:18.105   647   749 W JobServiceContext: Timed out while trying to bind for 17e178c #u0a154/174406261 com.android.vending/com.google.android.finsky.instantapps.PhenotypeUpdateService
+04-05 22:05:18.192   647   679 W ActivityManager: Rescheduling restart of crashed service com.google.android.inputmethod.latin/com.android.inputmethod.latin.LatinIME in 32124ms for mem-pressure-event
+04-05 22:05:18.192   647   679 W ActivityManager: Rescheduling restart of crashed service com.google.android.as/com.google.android.apps.miphone.aiai.app.AiAiPredictionService in 287715674ms for mem-pressure-event
+04-05 22:05:18.192   647   679 W ActivityManager: Rescheduling restart of crashed service com.google.android.as/com.google.android.apps.miphone.aiai.app.AiAiContentCaptureService in 1598441050ms for mem-pressure-event
+04-05 22:05:18.192   647   679 W ActivityManager: Rescheduling restart of crashed service com.google.android.as/com.google.android.apps.miphone.aiai.common.notification.service.AiAiNotificationAssistantService in 2909161066ms for mem-pressure-event
+04-05 22:05:18.192   647   679 W ActivityManager: Rescheduling restart of crashed service com.google.android.as/com.google.android.apps.miphone.aiai.captions.SystemCaptionsManagerService in 4219909802ms for mem-pressure-event
+04-05 22:05:18.192   647   679 W ActivityManager: Rescheduling restart of crashed service com.google.android.as/com.google.android.apps.miphone.aiai.common.notification.service.AiAiNotificationListenerService in 5530629802ms for mem-pressure-event
+04-05 22:05:18.547   647  1083 E PermissionControllerManager: Error updating user_sensitive flags for uid 10151
+04-05 22:05:18.547   647  1083 E PermissionControllerManager: java.util.concurrent.TimeoutException
+04-05 22:05:18.547   647  1083 E PermissionControllerManager: 	at com.android.internal.infra.AndroidFuture.triggerTimeout(AndroidFuture.java:289)
+04-05 22:05:18.547   647  1083 E PermissionControllerManager: 	at com.android.internal.infra.AndroidFuture$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+04-05 22:05:18.547   647  1083 E PermissionControllerManager: 	at android.os.Handler.handleCallback(Handler.java:1095)
+04-05 22:05:18.547   647  1083 E PermissionControllerManager: 	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+04-05 22:05:18.547   647  1083 E PermissionControllerManager: 	at android.os.Handler.dispatchMessage(Handler.java:125)
+04-05 22:05:18.547   647  1083 E PermissionControllerManager: 	at android.os.Looper.loopOnce(Looper.java:292)
+04-05 22:05:18.547   647  1083 E PermissionControllerManager: 	at android.os.Looper.loop(Looper.java:393)
+04-05 22:05:18.547   647  1083 E PermissionControllerManager: 	at android.os.HandlerThread.run(HandlerThread.java:139)
+04-05 22:05:18.547   647  1083 E PermissionControllerManager: 	at com.android.server.ServiceThread.run(ServiceThread.java:46)
+04-05 22:05:18.949   647  1930 D OomAdjuster: Not killing cached processes
+04-05 22:05:18.949  7515  7515 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.libs.gmscorelogger.service.START dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.PersistentDirectBootAwareApiService }
+04-05 22:05:19.164  7515  7515 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.scheduler.ACTION_PROXY_SCHEDULE dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.PersistentDirectBootAwareApiService }
+04-05 22:05:19.362 12394 12394 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.feedback.internal.IFeedbackService dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.GmsBoundBrokerService }
+04-05 22:05:19.534   647  1004 I HalDevMgr: bestIfaceCreationProposal is null, requestIface=STA, existingIface=[name=wlan0 type=STA]
+04-05 22:05:19.697   647   680 I ActivityManager: Test idle passed
+04-05 22:05:19.756  8714  8720 W System  : A resource failed to call release. 
+04-05 22:05:19.756  8714  8720 W System  : A resource failed to call release. 
+04-05 22:05:19.998  1336  1336 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 

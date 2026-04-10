@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
   console.log('🟢 Nuevo Piloto detectado en la red');
 
   socket.on('enviar_mensaje', (data) => {
-    console.log(`✉️ Transmisión de [${data.usuario}]: ${data.texto}`);
+    console.log(`✉️ Transmisión de [${data.username}]: ${data.text}`);
     io.emit('recibir_mensaje', data);
   });
 
@@ -58,7 +58,8 @@ app.post('/api/login', (req, res) => {
   res.json({ 
     success: true, 
     message: "Acceso concedido",
-    username: email.split('@')[0] 
+    username: email.split('@')[0],
+    token: 'secure_token_deathcloud_2026' 
   });
 });
 

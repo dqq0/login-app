@@ -1,35 +1,21 @@
-import { useState, useEffect } from 'react'
-import Login from './Login'
-import Chat from './Chat'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import MainLayout from './components/layout/MainLayout';
+import Dashboard from './views/Dashboard';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-
-  // Al cargar, verificar si ya hay un token (para mantener sesión viva)
-  useEffect(() => {
-    const token = localStorage.getItem('jwt_token');
-    if (token) {
-      setIsLoggedIn(true);
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem('jwt_token');
-    localStorage.removeItem('username');
-    setIsLoggedIn(false);
-  }
-
   return (
-    <div style={{ padding: '20px', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      {/* Condicional: Si NO está autenticado, muestra Login. Si ESTÁ autenticado muestra Chat */}
-      {!isLoggedIn ? (
-        <Login onLoginSuccess={() => setIsLoggedIn(true)} />
-      ) : (
-        <Chat onLogout={handleLogout} />
-      )}
-    </div>
-  )
+    <Router>
+      <MainLayout>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/ranking" element={<div className="flex h-full items-center justify-center p-8"><h1 className="neon-text text-4xl text-death-neon font-display">Ranking Global</h1></div>} />
+          <Route path="/comunidad" element={<div className="flex h-full items-center justify-center p-8"><h1 className="neon-text text-4xl text-death-neon font-display">Comunidad</h1></div>} />
+          <Route path="/tienda" element={<div className="flex h-full items-center justify-center p-8"><h1 className="neon-text text-4xl text-death-neon font-display">Tienda Freemium</h1></div>} />
+        </Routes>
+      </MainLayout>
+    </Router>
+  );
 }
 
-export default App
+export default App;

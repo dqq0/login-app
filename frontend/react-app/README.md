@@ -1,54 +1,60 @@
-# Death Cloud - Game Launcher Frontend
+# 🌐 Game Platform Launcher UI
 
-Este es el frontend de la plataforma "Death Cloud" (Game Launcher y Dashboard). Construido con React, Vite y estilizado exclusivamente con Vanilla CSS (mediante variables) + utilidades de Tailwind para una estética moderna y "cyberpunk".
+Bienvenido al frontend del Lanzador de Juegos Base. Construido con **React, Vite, Context API y Tailwind CSS**.
 
-## Ejecutar Localmente
+Esta plataforma cuenta con un diseño de **Esqueleto Agnóstico** con arquitectura responsiva (glassmorphism/estilo cyberpunk/neumórfico adaptable) pensado en la escalabilidad absoluta. Utiliza a "Death Cloud" internamente como un simple tema o juego de demostración para probar las capacidades del motor.
+
+> [!TIP]
+> **Totalmente Desacoplado y Listo para Múltiples Juegos**
+> Si clonas o haces fork a este repositorio, **no necesitas modificar componentes React para cambiar los colores o texturas**. La plataforma se ajustará instantáneamente al tema y metadatos del juego ingresado.
+
+## 🎨 Cambiando el Diseño y Contenido (Tema y Datos)
+
+Cualquier usuario o desarrollador que utilice este repositorio puede customizar completamente el proyecto (colores, fondos, nombres, tienda, noticias) modificando **un solo archivo**, sin tocar las vistas de React ni el CSS del esqueleto:
+
+1. Abre `src/config/gamesData.js`
+2. Modifica o crea un nuevo objeto en el arreglo devolviendo el `id`, los esquemas de color `theme-*` (en formado estrictamente RGB como `"0 243 255"` para soportar cálculos de opacidad de Tailwind), y las tuplas de Arrays (leaderboard, noticias y tienda).
+3. Selecciona tu juego u oblígalo como principal en el estado base de `src/context/GameContext.jsx`. Todo nuestro esqueleto absorberá y mapeará dinámicamente tu JSON inyectando **Variables CSS** en el `:root`, lo que disparará el redibujado de la UI entera (bordes vítreos, brillos de botones, fondos heroicos).
+
+## 🚀 Ejecutar Localmente
 
 ### 1. Instalación de Dependencias
-Abre una terminal en esta carpeta (\`frontend\react-app\`) e instala los paquetes:
+Abre una terminal en esta carpeta (`frontend\react-app\`) e instala los paquetes:
 
-\`\`\`bash
+```bash
 npm install
-\`\`\`
+```
 
 ### 2. Arrancar el Entorno de Desarrollo
-\`\`\`bash
+```bash
 npm run dev
-\`\`\`
-*(Puedes abrir la aplicación directamente en tu navegador en `http://localhost:5173/`)*
+```
+*(Puedes abrir la aplicación directamente en tu navegador en `http://localhost:5173/` o en el puerto sugerido)*
 
 
 ## 🔌 Conexión con el Backend
 
-Actualmente, este frontend está preparado con una arquitectura limpia para ser enlazado a un backend.
-
-El entorno se conecta principalmente de dos formas al servidor actual provisto en \`../backend\`:
+Actualmente, este frontend está preparado con una arquitectura limpia para ser enlazado a un backend. El entorno se conecta de dos formas al servidor actual provisto en `../backend`:
 
 ### API REST Clásica (Autenticación y Registros)
-El backend cuenta con Endpoints básicos en \`http://localhost:3000/api/\`:
+El backend cuenta con Endpoints básicos en `http://localhost:3000/api/`:
 - **POST `/api/register`**: Para registrar una cuenta nueva.
 - **POST `/api/login`**: Valida las credenciales y debe devolver un "Token" (ej, JWT).
   
-Para consumir esto desde React, te sugerimos utilizar \`fetch\` o instalar \`axios\` en peticiones asíncronas dentro de una carpeta \`/services\` en `src`.
+Para consumir esto desde React en una arquitectura seria, te sugerimos utilizar `fetch` o instalar `axios` aislando peticiones asíncronas dentro de una carpeta `/services` en `src`.
 
 ### WebSockets (Socket.io) para Chat en Vivo
-La aplicación Frontend ya posee en paquete `socket.io-client` y un componente de chat en vivo (\`src/components/chat/LiveChatPanel.jsx\`). 
-Para activarlo, debes conectarlo al puerto correcto e interactuar con los eventos que tiene programados el servidor:
-- **Eventos que escucha el backend**: \`enviar_mensaje\`
-- **Eventos que emite el backend**: \`historial_mensajes\`, \`recibir_mensaje\`
+La aplicación Frontend incluye `socket.io-client` y un componente de chat global en vivo (`src/components/chat/LiveChatPanel.jsx`). 
+Para activarlo, debes conectarlo al puerto e interactuar con los eventos del servidor:
+- **Eventos que escucha el backend**: `enviar_mensaje`
+- **Eventos que emite el backend**: `historial_mensajes`, `recibir_mensaje`
 
-## 🚀 Sugerencias Arquitectónicas Backend Profesionales
+## 🏗️ Sugerencias Arquitectónicas (Backend Profesional)
 
-El backend incluido es ultra básico y monolítico (un solo archivo `server.js` maneja todo). Si quieres llevar este juego a nivel de producción constante y masiva, la arquitectura ideal sería la siguiente:
+El simulador backend incluido localmente es ultra básico y monolítico. Si el objetivo escalar la plataforma (ej. estilo Client de Riot), la arquitectura ideal se vería así:
 
-### 1. Desacoplamiento (Servidores de State)
-- El **Servidor Web / API REST** deberías construirlo con frameworks eficientes (Sugerencia: **NestJS** en Typescript, o **Go** (Golang)). Esta API solo manejaría la Autenticación de las cuentas de Riot, Perfil de Usuario y Compras de la Tienda.
-- El **Servidor de Chat/Social** debe ser independiente para no bloquear recursos (se puede construir con Redis Pub/Sub con WebSocket).
-- El **Servidor de Partidas (Game Server)** debe estar en otra instancia completamente (C++, C# Unity Netcode como mencionaste en planes anteriores) utilizando UDP preferentemente y no TCP como los requerimientos web.
-
-### 2. Autenticación y Seguridad Real (Stateless)
-- Remover credenciales quemadas o autenticación en texto plano.
-- Transicionar a **JWT (JSON Web Tokens)** integrados en los Headers HTTP (\`Authorization: Bearer <TKN>\`) y guardados de manera segura en el cliente (ej. \`HttpOnly Cookies\` o Zustand Persist encripatdo) para autorizar compras.
-
-### 3. Migración de Base de Datos
-Se detecta configuración "pool" (Postgres). Para agilización, recomendamos acoplar Prisma ORM o TypeORM en la lógica de NodeJS para estandarizar las entidades o modelos de la Tienda (Ej: Armas, Monedas, Jugador, Historial de Pagos).
+1. **Desacoplamiento (Servidores Específicos)**:
+   - **Servidor Web / API REST**: Desarrollado en lenguajes escalables (Sugerencia: NestJS o Go). Manejará Autenticación y Tienda.
+   - **Servidor Social de Chat**: Instancia independiente (p. ej. *Redis Pub/Sub* enlazado con *WebSocket*) construida sola para escalar mensajería y clanes.
+   - **Game Server Dedicado**: Encargado absoluto del networking de físicas de combate y posición (C++, o C# Unity Netcode trabajando sobre túneles UDP para asegurar latencias mínimas debajo de 40ms en *Tick Rate* altos).
+2. **Seguridad Stateless Inquebrantable**: Utilización de *JWT (JSON Web Tokens) HttpOnly* para autorizar transacciones monetarias dentro del Game Launcher sin exponer sesiones estáticas.

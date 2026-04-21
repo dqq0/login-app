@@ -7,22 +7,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        'death-dark': '#040812',
-        'death-panel': 'rgba(10, 15, 30, 0.65)',
-        'death-neon': '#00f3ff',
-        'death-neon-glow': 'rgba(0, 243, 255, 0.5)',
-        'death-text': '#e0f2fe',
-        'death-muted': '#7dd3fc',
-        'death-danger': '#ef4444',
-        'death-success': '#22c55e',
+        'theme-dark': 'rgb(var(--theme-dark) / <alpha-value>)',
+        'theme-panel': 'var(--theme-panel)',
+        'theme-neon': 'rgb(var(--theme-neon) / <alpha-value>)',
+        'theme-neon-glow': 'var(--theme-neon-glow)',
+        'theme-text': 'rgb(var(--theme-text) / <alpha-value>)',
+        'theme-muted': 'rgb(var(--theme-muted) / <alpha-value>)',
+        'theme-danger': '#ef4444',
+        'theme-success': 'rgb(var(--theme-success) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
         display: ['Rajdhani', 'sans-serif'],
       },
       boxShadow: {
-        'neon': '0 0 10px rgba(0, 243, 255, 0.5), inset 0 0 4px rgba(0, 243, 255, 0.3)',
-        'neon-strong': '0 0 20px rgba(0, 243, 255, 0.8), inset 0 0 8px rgba(0, 243, 255, 0.5)',
+        'neon': '0 0 10px var(--theme-neon-glow), inset 0 0 4px rgba(0, 0, 0, 0.3)',
+        'neon-strong': '0 0 20px var(--theme-neon), inset 0 0 8px var(--theme-neon-glow)',
       }
     },
   },

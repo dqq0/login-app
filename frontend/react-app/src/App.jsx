@@ -2,10 +2,12 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainLayout from './components/layout/MainLayout';
 import Dashboard from './views/Dashboard';
+import { GameProvider } from './context/GameContext';
 
 function App() {
   return (
-    <Router>
+    <GameProvider>
+      <Router>
       <MainLayout>
         <Routes>
           <Route path="/" element={<Dashboard />} />
@@ -15,6 +17,7 @@ function App() {
         </Routes>
       </MainLayout>
     </Router>
+    </GameProvider>
   );
 }
 

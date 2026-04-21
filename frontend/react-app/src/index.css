@@ -12,9 +12,9 @@
   }
 
   body {
-    @apply bg-death-dark text-death-text font-sans antialiased overflow-x-hidden;
-    background-color: #040812;
-    background-image: radial-gradient(circle at 50% 0%, #0d1b2a 0%, #040812 70%);
+    @apply bg-theme-dark text-theme-text font-sans antialiased overflow-x-hidden transition-colors duration-500;
+    background-color: var(--theme-dark);
+    background-image: radial-gradient(circle at 50% 0%, var(--theme-gradient-start) 0%, var(--theme-dark) 70%);
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -39,28 +39,30 @@
 
 @layer components {
   .glass-panel {
-    @apply bg-death-panel backdrop-blur-md border border-[#00f3ff]/20 rounded-xl shadow-lg;
+    @apply bg-theme-panel backdrop-blur-md border border-theme-neon/20 rounded-xl shadow-lg transition-colors duration-500;
   }
   
   .glass-active {
-    @apply border-[#00f3ff]/60 shadow-neon bg-[rgba(10,15,30,0.8)];
+    @apply border-theme-neon/60 shadow-neon;
+    background-color: var(--theme-panel);
   }
   
   .neon-text {
-    text-shadow: 0 0 8px rgba(0,243,255,0.6);
+    text-shadow: 0 0 8px var(--theme-neon-glow);
   }
 
   .neon-button {
-    @apply relative overflow-hidden font-display font-bold uppercase tracking-wider text-death-text transition-all duration-300;
+    @apply relative overflow-hidden font-display font-bold uppercase tracking-wider text-theme-text transition-all duration-300;
   }
   
   .neon-button::before {
     content: '';
-    @apply absolute inset-0 bg-death-neon opacity-0 transition-opacity duration-300 pointer-events-none;
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300 pointer-events-none;
+    background-color: var(--theme-neon);
   }
 
   .neon-button:hover {
-    @apply shadow-neon-strong text-white border-death-neon;
+    @apply shadow-neon-strong text-white border-theme-neon;
   }
   
   .neon-button:hover::before {

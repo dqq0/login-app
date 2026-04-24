@@ -4,10 +4,14 @@ const { Server } = require('socket.io');
 const cors = require('cors');
 
 const app = express();
+const authRoutes = require('./routes/authRoutes');
 
 // Middlewares: Permiten recibir datos y conectar desde el puerto 5500 (Live Server)
 app.use(cors());
 app.use(express.json());
+
+// --- ROUTES ---
+app.use('/api', authRoutes);
 
 const server = http.createServer(app);
 
@@ -33,16 +37,34 @@ app.get('/', (req, res) => {
 // --- LÓGICA DEL CHAT Y BASE DE DATOS ---
 const pool = require('./config/db');
 
-// Iniciamos la tabla por si no existe
-pool.query(`
-  CREATE TABLE IF NOT EXISTS mensajes (
-    id SERIAL PRIMARY KEY,
-    usuario VARCHAR(100) NOT NULL,
-    texto TEXT NOT NULL,
-    hora VARCHAR(50) NOT NULL
-  )
-`).then(() => console.log('📦 Tabla de mensajes verificada en la BD'))
-  .catch(err => console.error('❌ Error verificando la tabla de mensajes:', err));
+// Iniciamos las tablas por si no existen
+async function initDB() {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS usuarios (
+        id SERIAL PRIMARY KEY,
+        nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
+        email VARCHAR(100) UNIQUE NOT NULL,
+        clave_encriptada VARCHAR(255) NOT NULL,
+        fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('📦 Tabla de usuarios verificada');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS mensajes (
+        id SERIAL PRIMARY KEY,
+        usuario VARCHAR(100) NOT NULL,
+        texto TEXT NOT NULL,
+        hora VARCHAR(50) NOT NULL
+      )
+    `);
+    console.log('📦 Tabla de mensajes verificada');
+  } catch (err) {
+    console.error('❌ Error inicializando la BD:', err);
+  }
+}
+initDB();
 
 io.on('connection', async (socket) => {
   console.log('🟢 Nuevo Piloto detectado en la red');
@@ -76,27 +98,10 @@ io.on('connection', async (socket) => {
   });
 });
 
-// --- RUTA DE REGISTRO ---
-app.post('/api/register', (req, res) => {
-  const { email } = req.body;
-  console.log(`📝 Nuevo registro simulado: ${email}`);
-  res.json({ success: true, message: "Usuario registrado correctamente" });
-});
+// Rutas eliminadas porque ahora están en authRoutes.js
 
-// --- RUTA DE LOGIN ---
-app.post('/api/login', (req, res) => {
-  const { email } = req.body;
-  console.log(`🔑 Intento de acceso: ${email}`);
-  res.json({ 
-    success: true, 
-    message: "Acceso concedido",
-    username: email.split('@')[0],
-    token: "token-simulado-12345" // Quedó el token de Diego
-  });
-});
-
-const PORT = 3000;
-server.listen(PORT, () => {
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, '0.0.0.0', () => {
   console.log('-------------------------------------------');
   console.log(`🚀 BACKEND CORRIENDO: http://localhost:${PORT}`);
   console.log('-------------------------------------------');

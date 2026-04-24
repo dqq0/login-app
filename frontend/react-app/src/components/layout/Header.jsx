@@ -1,9 +1,9 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { FiSearch, FiBell, FiMessageSquare } from 'react-icons/fi';
+import { FiSearch, FiBell, FiMessageSquare, FiLogOut } from 'react-icons/fi';
 import { useGame } from '../../context/GameContext';
 
-export default function Header({ onToggleChat }) {
+export default function Header({ onToggleChat, user, onLogout }) {
   const { gameInfo, switchGame, availableGames } = useGame();
   
   const navItems = [
@@ -80,17 +80,28 @@ export default function Header({ onToggleChat }) {
           <FiMessageSquare size={22} />
         </button>
         <div className="h-8 w-[1px] bg-theme-neon/20 mx-2"></div>
-        <div className="flex items-center gap-3 cursor-pointer group">
+        <div className="flex items-center gap-3 group relative">
           <div className="relative">
-            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-transparent group-hover:border-theme-neon transition-colors">
-              <img src="/assets/hero_bg.png" alt="Avatar" className="w-full h-full object-cover grayscale-[0.2]" />
+            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-transparent group-hover:border-theme-neon transition-colors bg-theme-panel">
+              <div className="w-full h-full flex items-center justify-center text-theme-neon font-bold">
+                {user?.username?.substring(0, 2).toUpperCase()}
+              </div>
             </div>
             <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-theme-success border-2 border-theme-dark transition-colors duration-500"></span>
           </div>
           <div className="hidden lg:flex flex-col">
-            <span className="font-bold text-sm text-theme-text">ShadowFang</span>
-            <span className="text-xs text-theme-success">En línea</span>
+            <span className="font-bold text-sm text-theme-text">{user?.username || 'Invitado'}</span>
+            <span className="text-[10px] text-theme-success uppercase tracking-tighter">En línea</span>
           </div>
+          
+          {/* Logout Button (Appears on Hover or simply visible) */}
+          <button 
+            onClick={onLogout}
+            className="ml-2 p-2 rounded-full hover:bg-red-500/10 text-theme-muted hover:text-red-400 transition-all"
+            title="Cerrar Sesión"
+          >
+            <FiLogOut size={18} />
+          </button>
         </div>
       </div>
     </header>

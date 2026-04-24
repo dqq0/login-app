@@ -3,7 +3,7 @@ import Header from './Header';
 import LiveChatPanel from '../chat/LiveChatPanel';
 import { useGame } from '../../context/GameContext';
 
-export default function MainLayout({ children }) {
+export default function MainLayout({ children, user, onLogout }) {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const { gameInfo } = useGame();
 
@@ -18,7 +18,11 @@ export default function MainLayout({ children }) {
 
       {/* Main UI Layer */}
       <div className="relative z-10 flex flex-col min-h-screen">
-        <Header onToggleChat={() => setIsChatOpen(!isChatOpen)} />
+        <Header 
+          user={user} 
+          onLogout={onLogout} 
+          onToggleChat={() => setIsChatOpen(!isChatOpen)} 
+        />
         
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-8 py-6 flex flex-col">
           {children}
@@ -40,7 +44,11 @@ export default function MainLayout({ children }) {
         </footer>
       </div>
 
-      <LiveChatPanel isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+      <LiveChatPanel 
+        isOpen={isChatOpen} 
+        onClose={() => setIsChatOpen(false)} 
+        user={user}
+      />
     </div>
   );
 }

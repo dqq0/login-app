@@ -1,0 +1,10 @@
+services:
+  backend:
+    build:
+      target: prod
+    restart: always
+
+  frontend:
+    build:
+      target: prod
+    restart: always

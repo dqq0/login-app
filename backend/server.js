@@ -2,26 +2,23 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
 const authRoutes = require('./routes/authRoutes');
+const pool = require('./config/db');
 
-// Middlewares: Permiten recibir datos y conectar desde el puerto 5500 (Live Server)
-app.use(cors());
+// --- MIDDLEWARES ---
+// Configuración de CORS más segura
+app.use(cors({
+  origin: process.env.FRONTEND_URL || '*', // En producción debería ser el dominio real
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // --- ROUTES ---
 app.use('/api', authRoutes);
-
-const server = http.createServer(app);
-
-// Configuración de WebSockets
-const io = new Server(server, {
-  cors: {
-    origin: "*", 
-    methods: ["GET", "POST"]
-  }
-});
 
 // --- RUTA DE PRUEBA ---
 app.get('/', (req, res) => {
@@ -30,46 +27,30 @@ app.get('/', (req, res) => {
       <h1>🚀 SERVIDOR DEATHCLOUD ACTIVO</h1>
       <p style="color: #fff; opacity: 0.8;">El backend está escuchando en el puerto 3000</p>
       <div style="border: 1px solid #00d2ff; padding: 10px; border-radius: 5px;">Socket.io: ONLINE</div>
+      <p style="font-size: 0.8rem; margin-top: 20px; color: #555;">v2.0 - JWT Enabled</p>
     </body>
   `);
 });
 
-// --- LÓGICA DEL CHAT Y BASE DE DATOS ---
-const pool = require('./config/db');
+// --- CENTRALIZED ERROR HANDLING ---
+app.use((err, req, res, next) => {
+  console.error('❌ Error detectado:', err.stack);
+  res.status(500).json({ success: false, message: 'Error interno del servidor' });
+});
 
-// Iniciamos las tablas por si no existen
-async function initDB() {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS usuarios (
-        id SERIAL PRIMARY KEY,
-        nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
-        email VARCHAR(100) UNIQUE NOT NULL,
-        clave_encriptada VARCHAR(255) NOT NULL,
-        fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-    console.log('📦 Tabla de usuarios verificada');
+const server = http.createServer(app);
 
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS mensajes (
-        id SERIAL PRIMARY KEY,
-        usuario VARCHAR(100) NOT NULL,
-        texto TEXT NOT NULL,
-        hora VARCHAR(50) NOT NULL
-      )
-    `);
-    console.log('📦 Tabla de mensajes verificada');
-  } catch (err) {
-    console.error('❌ Error inicializando la BD:', err);
+// --- SOCKET.IO ---
+const io = new Server(server, {
+  cors: {
+    origin: "*", 
+    methods: ["GET", "POST"]
   }
-}
-initDB();
+});
 
 io.on('connection', async (socket) => {
   console.log('🟢 Nuevo Piloto detectado en la red');
 
-  // Recuperar historial de la base de datos y mandarlo al cliente
   try {
     const result = await pool.query('SELECT usuario, texto, hora FROM mensajes ORDER BY id ASC LIMIT 100');
     socket.emit('historial_mensajes', result.rows);
@@ -79,30 +60,55 @@ io.on('connection', async (socket) => {
 
   socket.on('enviar_mensaje', async (data) => {
     console.log(`✉️ Transmisión de [${data.usuario}]: ${data.texto}`);
-    
-    // Guardar el mensaje en la base de datos
     try {
       await pool.query(
         'INSERT INTO mensajes (usuario, texto, hora) VALUES ($1, $2, $3)',
         [data.usuario, data.texto, data.hora || new Date().toLocaleTimeString()]
       );
-      // Emitir el mensaje al resto (o a todos)
       io.emit('recibir_mensaje', data);
     } catch (err) {
-      console.error('Error al guardar en la base de datos:', err);
+      console.error('Error al guardar mensaje:', err);
     }
   });
 
   socket.on('disconnect', () => {
-    console.log('🔴 Piloto fuera de rango (Desconectado)');
+    console.log('🔴 Piloto desconectado');
   });
 });
 
-// Rutas eliminadas porque ahora están en authRoutes.js
+// --- DB INITIALIZATION ---
+async function initDB() {
+  const queries = [
+    `CREATE TABLE IF NOT EXISTS usuarios (
+      id SERIAL PRIMARY KEY,
+      nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
+      email VARCHAR(100) UNIQUE NOT NULL,
+      clave_encriptada VARCHAR(255) NOT NULL,
+      fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+    `CREATE TABLE IF NOT EXISTS mensajes (
+      id SERIAL PRIMARY KEY,
+      usuario VARCHAR(100) NOT NULL,
+      texto TEXT NOT NULL,
+      hora VARCHAR(50) NOT NULL
+    )`
+  ];
+
+  try {
+    for (let query of queries) {
+      await pool.query(query);
+    }
+    console.log('📦 Base de datos sincronizada');
+  } catch (err) {
+    console.error('❌ Error inicializando la BD:', err);
+  }
+}
+
+initDB();
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
   console.log('-------------------------------------------');
-  console.log(`🚀 BACKEND CORRIENDO: http://localhost:${PORT}`);
+  console.log(`🚀 BACKEND CORRIENDO EN PUERTO: ${PORT}`);
   console.log('-------------------------------------------');
 });

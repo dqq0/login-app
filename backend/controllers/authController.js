@@ -1,5 +1,6 @@
 const pool = require('../config/db');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 // Registro de Piloto
 exports.register = async (req, res) => {
@@ -57,12 +58,19 @@ exports.login = async (req, res) => {
             return res.status(400).json({ success: false, message: "Credenciales inválidas" });
         }
 
+        // Generar Token Real
+        const token = jwt.sign(
+            { id: user.id, username: user.nombre_usuario },
+            process.env.JWT_SECRET || 'deathcloud-secret-key-2026',
+            { expiresIn: '24h' }
+        );
+
         // Login exitoso
         res.json({ 
             success: true, 
             message: "Acceso concedido",
             username: user.nombre_usuario,
-            token: "token-simulado-" + Date.now() // Token simplificado por ahora
+            token: token
         });
 
     } catch (err) {

@@ -107,8 +107,12 @@ async function initDB() {
 initDB();
 
 const PORT = process.env.PORT || 3000;
+const ENV = process.env.NODE_ENV || 'development';
+
 server.listen(PORT, '0.0.0.0', () => {
   console.log('-------------------------------------------');
-  console.log(`🚀 BACKEND CORRIENDO EN PUERTO: ${PORT}`);
+  console.log(`🚀 DEATHCLOUD BACKEND [${ENV.toUpperCase()}]`);
+  console.log(`📡 PUERTO: ${PORT}`);
+  console.log(`📦 DB: ${process.env.DB_NAME || 'app_db'}`);
   console.log('-------------------------------------------');
 });

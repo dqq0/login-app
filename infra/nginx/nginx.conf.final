@@ -1,0 +1,53 @@
+events {
+    worker_connections 1024;
+}
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+    keepalive_timeout  65;
+
+    # BLOQUE PARA DESARROLLO (dev.192.168.50.24 o puerto específico)
+    server {
+        listen 80;
+        server_name dev.deathcloud.local; # Puedes usar esto en tu /etc/hosts
+
+        location / {
+            root /var/www/proyecto/back-dev/dist; # O proxy al puerto de Vite si sigue en ejecución
+            index index.html;
+            try_files $uri $uri/ /index.html;
+        }
+
+        location /api {
+            proxy_pass http://localhost:3000; # Backend Dev
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+    }
+
+    # BLOQUE PARA PRODUCCIÓN (192.168.50.24)
+    server {
+        listen 80;
+        server_name deathcloud.local; # IP principal del servidor
+
+        location / {
+            root /var/www/proyecto/back-prod/dist;
+            index index.html;
+            try_files $uri $uri/ /index.html;
+        }
+
+        location /api {
+            proxy_pass http://localhost:4000; # Backend Prod
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+    }
+}

@@ -1,4 +1,0 @@
-[master bb4c512] Actualizando la guía de uso de Android y subiendo los últimos cambios
- Date: Sun Apr 5 22:25:28 2026 -0400
- 2 files changed, 145 insertions(+), 32 deletions(-)
- create mode 100644 logcat.txt

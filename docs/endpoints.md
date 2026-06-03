@@ -1,40 +1,94 @@
-# 📡 Documentación de Endpoints (API) - Death Clouds
+# 📡 API Endpoints — DeathCloud Platform
 
-Este documento detalla las rutas de acceso del servidor para interactuar con la red DeathCloud.
+Base URL (desarrollo): `http://localhost:3000`  
+Servidor VPN: `http://192.168.50.24:3000`
 
-## 🔐 Rutas de Autenticación (`/api/*`)
-
-| Método | Endpoint | Acción | Parámetros sugeridos (JSON) | Protegido |
-| :--- | :--- | :--- | :--- | :--- |
-| **POST** | `/api/login` | Inicia sesión del usuario | `{ "email", "password" }` | No |
-| **POST** | `/api/register` | Crea una cuenta nueva | `{ "username", "email", "password" }` | No |
-
-## 👤 Rutas de Perfil (`/api/profile/*`)
-
-| Método | Endpoint | Acción | Parámetros sugeridos (JSON) | Protegido |
-| :--- | :--- | :--- | :--- | :--- |
-| **GET** | `/api/profile` | Obtiene el perfil del usuario activo | Ninguno | Sí (JWT) |
-| **PUT** | `/api/profile` | Actualiza avatar, bio y nickname | `{ "avatar_url", "bio", "nickname" }` | Sí (JWT) |
-| **PUT** | `/api/profile/password` | Cambia la contraseña del usuario | `{ "oldPassword", "newPassword" }` | Sí (JWT) |
-| **PUT** | `/api/profile/deathcloud-id` | Cambia el ID de usuario único | `{ "password", "newDeathCloudId" }` | Sí (JWT) |
-| **GET** | `/api/profile/public/:username` | Obtiene el perfil público de otro piloto | Ninguno | No |
-
-## 🎮 Rutas de Juego Individual (`/api/game/:gameId/*`)
-
-Estas rutas permiten el aislamiento completo de datos por cada sección de juego (`deathcloud-runner`, `deathcloud-toxic-skies` y `deathcloud-2d`).
-
-| Método | Endpoint | Acción | Parámetros sugeridos (JSON) | Protegido |
-| :--- | :--- | :--- | :--- | :--- |
-| **GET** | `/api/game/:gameId/leaderboard` | Obtiene la clasificación top de ese juego | Ninguno | No |
-| **GET** | `/api/game/:gameId/credits` | Obtiene los E-Points del usuario en ese juego | Ninguno | Sí (JWT) |
-| **POST** | `/api/game/:gameId/credits/add` | Adiciona E-Points a la cuenta del juego | `{ "amount" }` | Sí (JWT) |
-| **GET** | `/api/game/:gameId/skins` | Obtiene la lista de skins compradas en ese juego | Ninguno | Sí (JWT) |
-| **POST** | `/api/game/:gameId/skins/buy` | Compra una skin de la tienda en ese juego | `{ "skinId", "price" }` | Sí (JWT) |
-| **POST** | `/api/game/:gameId/stats` | Actualiza la puntuación del piloto en ese juego | `{ "score" }` | Sí (JWT) |
+> Para rutas **protegidas** incluir header: `Authorization: Bearer <jwt_token>`
 
 ---
 
-## ⚙️ Notas para Desarrolladores
-- **Base URL:** El frontend apunta a `http://localhost:3000`.
-- **JWT Header:** Para todas las rutas marcadas como **Protegido**, debes incluir la cabecera `Authorization: Bearer <tu_token_jwt>`.
-- **Modo Local Resiliente:** Si el servidor Postgres de la VPN no está conectado o está fuera de línea, el backend continuará funcionando en modo local (in-memory) de forma automática.
+## 🔐 Autenticación
+
+| Método | Endpoint | Descripción | Body |
+|---|---|---|---|
+| POST | `/api/register` | Registrar nuevo piloto | `{ username, email, password }` |
+| POST | `/api/login` | Iniciar sesión | `{ email, password }` |
+
+**Respuesta login exitoso:**
+```json
+{
+  "success": true,
+  "username": "Sebastian",
+  "nickname": "Sebastian",
+  "rol": "admin",
+  "token": "<jwt>"
+}
+```
+
+---
+
+## 👤 Perfil de Usuario
+
+| Método | Endpoint | Descripción | Auth | Body |
+|---|---|---|---|---|
+| GET | `/api/profile` | Obtener perfil propio | ✅ | — |
+| PUT | `/api/profile` | Actualizar avatar, bio, nickname | ✅ | `{ avatar_url, bio, nickname }` |
+| PUT | `/api/profile/password` | Cambiar contraseña | ✅ | `{ oldPassword, newPassword }` |
+| PUT | `/api/profile/deathcloud-id` | Cambiar DeathCloud ID | ✅ | `{ password, newDeathCloudId }` |
+| GET | `/api/profile/public/:username` | Ver perfil público de otro piloto | ❌ | — |
+
+---
+
+## 🎮 Juego (por `:gameId`)
+
+`gameId` válidos: `deathcloud-runner` · `deathcloud-toxic-skies` · `deathcloud-2d`
+
+| Método | Endpoint | Descripción | Auth | Body |
+|---|---|---|---|---|
+| GET | `/api/game/:gameId/leaderboard` | Clasificación top del juego | ❌ | — |
+| GET | `/api/game/:gameId/credits` | Balance de E-Points del usuario | ✅ | — |
+| POST | `/api/game/:gameId/credits/add` | Añadir E-Points (compra de paquete) | ✅ | `{ amount }` |
+| GET | `/api/game/:gameId/skins` | Skins adquiridas por el usuario | ✅ | — |
+| POST | `/api/game/:gameId/skins/buy` | Comprar una skin | ✅ | `{ skinId, price }` |
+| POST | `/api/game/:gameId/stats` | Guardar/actualizar puntaje | ✅ | `{ score }` |
+
+---
+
+## 👥 Amigos
+
+| Método | Endpoint | Descripción | Auth | Body |
+|---|---|---|---|---|
+| GET | `/api/friends` | Listar amigos y solicitudes pendientes | ✅ | — |
+| POST | `/api/friends/request` | Enviar solicitud de amistad | ✅ | `{ friendUsername }` |
+| POST | `/api/friends/respond` | Aceptar o rechazar solicitud | ✅ | `{ requestId, action: 'aceptado'|'rechazado' }` |
+| DELETE | `/api/friends/:id` | Eliminar amigo | ✅ | — |
+
+---
+
+## 🎫 Tickets de Soporte
+
+| Método | Endpoint | Descripción | Auth | Body |
+|---|---|---|---|---|
+| GET | `/api/tickets` | Ver mis tickets | ✅ | — |
+| POST | `/api/tickets` | Crear ticket nuevo | ✅ | `{ title, description, category, priority }` |
+
+**Categorías válidas:** `cuenta` · `bug` · `tienda` · `otro`  
+**Prioridades válidas:** `baja` · `media` · `alta` · `critica`
+
+---
+
+## 🛡️ Administración
+
+| Método | Endpoint | Descripción | Auth | Body |
+|---|---|---|---|---|
+| GET | `/api/admin/users` | Listar todos los usuarios | ✅ Admin | — |
+| PUT | `/api/admin/users/:id/ban` | Banear/desbanear usuario | ✅ Admin | `{ baneado, motivo_ban }` |
+| PUT | `/api/admin/users/:id/role` | Cambiar rol de usuario | ✅ Admin | `{ rol }` |
+
+---
+
+## ⚙️ Notas
+
+- **Modo Mock**: Si PostgreSQL no está disponible, el backend activa modo in-memory automáticamente
+- **Socket.io**: Chat en tiempo real en el mismo puerto. Eventos: `enviar_mensaje`, `recibir_mensaje`, `historial_mensajes`
+- **CORS**: Configurado para `http://localhost:5173` en DEV. Cambiar `FRONTEND_URL` en `.env` para producción

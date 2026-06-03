@@ -1,46 +1,76 @@
-# Guía de Entornos (Dev/Prod) - Setup Nativo
+# 🌍 Configuración de Entornos — DeathCloud
 
-Este documento explica cómo gestionar los entornos de Desarrollo y Producción utilizando Node.js, Nginx y PostgreSQL de forma nativa (sin contenedores).
+## Variables de Entorno (`backend/.env`)
 
-## Arquitectura de Red
+Copia `.env.example` a `.env` y ajusta los valores:
 
-La aplicación se comunica a través de puertos específicos para evitar conflictos:
+```env
+# Servidor
+PORT=3000
+NODE_ENV=development
+JWT_SECRET=deathcloud-secret-key-dev-2026
 
-| Entorno | Componente | Puerto | URL Local |
-| :--- | :--- | :--- | :--- |
-| **Producción** | Frontend | 80 | `http://<IP_SERVIDOR>` |
-| **Producción** | Backend | 4000 | `http://<IP_SERVIDOR>:4000` |
-| **Desarrollo** | Frontend | 8080 | `http://<IP_SERVIDOR>:8080` |
-| **Desarrollo** | Backend | 3000 | `http://<IP_SERVIDOR>:3000` |
+# Base de datos PostgreSQL
+DB_USER=postgres
+DB_HOST=localhost          # O IP del servidor via VPN (ej: 192.168.50.24)
+DB_PASSWORD=tu_password
+DB_PORT=5432
+DB_NAME=death_cloud_dev
 
-## Gestión con PM2 (Ubuntu Server)
-
-Para mantener los procesos activos 24/7 en el servidor:
-
-```bash
-# Iniciar Producción
-cd backend
-node --env-file=.env.prod server.js # Prueba manual
-pm2 start server.js --name login-back-prod -- --env-file=.env.prod
-
-# Iniciar Desarrollo
-pm2 start server.js --name login-back-dev -- --env-file=.env.dev
+# CORS - URL del frontend
+FRONTEND_URL=http://localhost:5173
 ```
 
-## Configuración de Base de Datos
+---
 
-Se requieren dos bases de datos en el mismo servidor PostgreSQL:
+## Entornos Disponibles
 
-1.  `death_cloud_prod`: Usuarios reales y datos críticos.
-2.  `death_cloud_dev`: Pruebas y experimentos.
+| Variable | DEV (local) | DEV (VPN) | PROD |
+|---|---|---|---|
+| `DB_HOST` | `localhost` | `192.168.50.24` | IP del servidor |
+| `DB_NAME` | `death_cloud_dev` | `death_cloud_dev` | `death_cloud_prod` |
+| `PORT` | `3000` | `3000` | `4000` |
+| `NODE_ENV` | `development` | `development` | `production` |
+| `FRONTEND_URL` | `http://localhost:5173` | `http://localhost:5173` | `https://deathcloud.com` |
 
-### Bypass de Contraseña (Solo para Demo)
-Si olvidaste la contraseña local, puedes editar el archivo `pg_hba.conf` y cambiar el método de autenticación de `scram-sha-256` a `trust` para las conexiones `127.0.0.1/32`.
+---
 
-## Variables de Entorno (.env)
+## Modo Mock (Sin DB)
 
-Cada entorno lee su propio archivo:
-- `backend/.env.dev`
-- `backend/.env.prod`
+Si PostgreSQL **no está disponible**, el backend activa automáticamente un modo in-memory:
 
-Asegúrate de que `DB_NAME` y `PORT` coincidan con la tabla de arriba.
+- ✅ Login funciona con usuarios pre-cargados (Sebastian / diego)
+- ✅ E-Points, skins, stats funcionan en memoria
+- ❌ Los datos **no persisten** entre reinicios del servidor
+
+**Usuarios de prueba (mock):**
+| Usuario | Email | Contraseña | Rol |
+|---|---|---|---|
+| Sebastian | seba@test.com | seba123 | admin |
+| diego | diego@deathcloud.com | admin123 | admin |
+
+---
+
+## Inicialización de la DB real
+
+Con la VPN activa y `.env` configurado:
+
+```bash
+cd backend
+node init_db.js
+```
+
+Esto crea automáticamente:
+- Tabla `usuarios` con todas las columnas
+- Tabla `mensajes` (chat)
+- Tabla `amigos`
+- Tabla `tickets`
+- Esquemas `runner`, `skies`, `2d` con tablas `user_credits`, `user_skins`, `user_stats`
+- Datos seed del leaderboard para cada juego
+
+---
+
+## Conexión VPN
+
+El servidor de base de datos está en `192.168.50.24` (Ubuntu Server 24.04, PostgreSQL 16).  
+Para conectarse hay que estar en la red de la universidad o tener activa la VPN de la institución.

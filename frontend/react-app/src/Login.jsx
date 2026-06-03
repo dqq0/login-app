@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FiUser, FiMail, FiLock, FiChevronRight } from 'react-icons/fi';
 
-const Login = ({ onLoginSuccess }) => {
+const Login = ({ onLoginSuccess, isModal = false }) => {
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
@@ -19,8 +19,17 @@ const Login = ({ onLoginSuccess }) => {
       ? { username, email, password } 
       : { email, password };
 
+    // Detectar si estamos en Web (localhost/dominio) o Android (file://)
+    const getApiUrl = (route) => {
+      if (window.location.protocol !== 'file:') {
+        return `/api/${route}`;
+      }
+      const base = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      return `${base}/${route}`;
+    };
+
     try {
-      const response = await fetch(`/api/${endpoint}`, {
+      const response = await fetch(getApiUrl(endpoint), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -37,10 +46,16 @@ const Login = ({ onLoginSuccess }) => {
         setIsRegister(false);
         setError('Registro exitoso. ¡Ahora puedes iniciar sesión!');
       } else {
-        // Login exitoso
+        // Login exitoso - limpiar sesión anterior y guardar nueva
+        localStorage.removeItem('username');
+        localStorage.removeItem('nickname');
+        localStorage.removeItem('jwt_token');
+        localStorage.removeItem('role');
         localStorage.setItem('jwt_token', data.token);
         localStorage.setItem('username', data.username);
-        onLoginSuccess({ username: data.username, token: data.token });
+        localStorage.setItem('nickname', data.nickname || data.username);
+        localStorage.setItem('role', data.rol || 'user');
+        onLoginSuccess({ username: data.username, nickname: data.nickname || data.username, token: data.token, rol: data.rol || 'user' });
       }
     } catch (err) {
       setError(err.message);
@@ -50,22 +65,28 @@ const Login = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#09090b] relative overflow-hidden font-sans">
+    <div className={isModal ? "w-full flex items-center justify-center bg-transparent relative font-sans" : "min-h-screen w-full flex items-center justify-center bg-[#09090b] relative overflow-hidden font-sans"}>
       {/* Background Decor */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-theme-neon/10 blur-[120px] rounded-full"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-theme-neon/5 blur-[120px] rounded-full"></div>
+      {!isModal && (
+        <>
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-theme-neon/10 blur-[120px] rounded-full"></div>
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-theme-neon/5 blur-[120px] rounded-full"></div>
+        </>
+      )}
 
-      <div className="relative z-10 w-full max-w-md p-8">
-        <div className="text-center mb-8">
-          <h1 className="font-display font-black text-5xl tracking-tighter text-white mb-2" style={{ textShadow: '0 0 20px var(--theme-neon-glow)' }}>
-            DEATHCLOUD
-          </h1>
-          <p className="text-theme-neon text-xs tracking-[0.4em] uppercase font-bold opacity-80">
-            {isRegister ? 'Registro de Piloto' : 'Acceso a la Red'}
-          </p>
-        </div>
+      <div className={isModal ? "relative z-10 w-full p-2" : "relative z-10 w-full max-w-md p-8"}>
+        {!isModal && (
+          <div className="text-center mb-8">
+            <h1 className="font-display font-black text-5xl tracking-tighter text-white mb-2" style={{ textShadow: '0 0 20px var(--theme-neon-glow)' }}>
+              DEATHCLOUD
+            </h1>
+            <p className="text-theme-neon text-xs tracking-[0.4em] uppercase font-bold opacity-80">
+              {isRegister ? 'Registro de Jugador' : 'Acceso a la Red'}
+            </p>
+          </div>
+        )}
 
-        <div className="glass-panel p-8 border border-white/5 bg-white/[0.02] backdrop-blur-2xl rounded-2xl shadow-2xl">
+        <div className="glass-panel p-6 md:p-8 border border-white/5 bg-white/[0.02] backdrop-blur-2xl rounded-2xl shadow-2xl">
           {error && (
             <div className={`p-3 rounded-lg mb-6 text-xs font-bold ${error.includes('exitoso') ? 'bg-theme-success/20 text-theme-success' : 'bg-red-500/20 text-red-400'} border border-current/20`}>
               {error}
@@ -99,7 +120,7 @@ const Login = ({ onLoginSuccess }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-theme-neon/50 focus:bg-black/60 transition-all text-sm"
-                  placeholder="piloto@nexus.com"
+                  placeholder="jugador@deathcloud.com"
                   required
                 />
               </div>

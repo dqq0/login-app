@@ -1,12 +1,5 @@
-const { Pool } = require('pg');
+const pool = require('./config/db');
 const bcrypt = require('bcryptjs');
-
-// Misma conexión a tu base de datos local
-const pool = new Pool({
-    user: 'diego',
-    host: '/var/run/postgresql',
-    database: 'app_db'
-});
 
 async function crearUsuario() {
     const nombre = 'Sebastian';
@@ -18,12 +11,12 @@ async function crearUsuario() {
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(passwordPlana, salt);
 
-        // 2. Insertar en la base de datos
+        // 2. Insertar en la base de datos con los nombres de columna correctos
         const query = `
-      INSERT INTO usuarios (nombre, email, password_hash) 
-      VALUES ($1, $2, $3) 
-      RETURNING id, nombre, email
-    `;
+            INSERT INTO usuarios (nombre_usuario, nickname, email, clave_encriptada) 
+            VALUES ($1, $1, $2, $3) 
+            RETURNING id, nombre_usuario, nickname, email
+        `;
         const values = [nombre, email, passwordHash];
 
         const res = await pool.query(query, values);
@@ -38,4 +31,4 @@ async function crearUsuario() {
     }
 }
 
-crearUsuario();
+crearUsuario();

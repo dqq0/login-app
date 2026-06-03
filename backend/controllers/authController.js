@@ -19,7 +19,7 @@ exports.register = async (req, res) => {
 
         // Insertar
         const result = await pool.query(
-            'INSERT INTO usuarios (nombre_usuario, email, clave_encriptada) VALUES ($1, $2, $3) RETURNING id, nombre_usuario, email',
+            'INSERT INTO usuarios (nombre_usuario, nickname, email, clave_encriptada, rol, baneado) VALUES ($1, $1, $2, $3, \'user\', false) RETURNING id, nombre_usuario, nickname, email, rol',
             [username, email, passwordHash]
         );
 
@@ -28,7 +28,9 @@ exports.register = async (req, res) => {
             message: "Registro exitoso", 
             user: { 
                 id: result.rows[0].id, 
-                username: result.rows[0].nombre_usuario 
+                username: result.rows[0].nombre_usuario,
+                nickname: result.rows[0].nickname,
+                rol: result.rows[0].rol
             } 
         });
 
@@ -52,15 +54,28 @@ exports.login = async (req, res) => {
 
         const user = result.rows[0];
 
+        // Control de Ban: Verificar si el usuario está suspendido
+        if (user.baneado) {
+            return res.status(403).json({ 
+                success: false, 
+                message: `Transmisión rechazada. Tu cuenta ha sido suspendida. Motivo: ${user.motivo_ban || 'No especificado'}.` 
+            });
+        }
+
         // Verificar password
         const validPassword = await bcrypt.compare(password, user.clave_encriptada);
         if (!validPassword) {
             return res.status(400).json({ success: false, message: "Credenciales inválidas" });
         }
 
-        // Generar Token Real
+        // Generar Token Real inyectando el rol y el estado de ban en el payload
         const token = jwt.sign(
-            { id: user.id, username: user.nombre_usuario },
+            { 
+                id: user.id, 
+                username: user.nombre_usuario,
+                rol: user.rol,
+                baneado: user.baneado
+            },
             process.env.JWT_SECRET || 'deathcloud-secret-key-2026',
             { expiresIn: '24h' }
         );
@@ -70,6 +85,8 @@ exports.login = async (req, res) => {
             success: true, 
             message: "Acceso concedido",
             username: user.nombre_usuario,
+            nickname: user.nickname || user.nombre_usuario,
+            rol: user.rol,
             token: token
         });
 

@@ -1,45 +1,46 @@
-# Guía de Entornos (Dev/Prod)
+# Guía de Entornos (Dev/Prod) - Setup Nativo
 
-Este documento explica cómo levantar y gestionar los entornos del proyecto.
+Este documento explica cómo gestionar los entornos de Desarrollo y Producción utilizando Node.js, Nginx y PostgreSQL de forma nativa (sin contenedores).
 
-## Requisitos
-- Docker y Docker Compose instalados.
+## Arquitectura de Red
 
-## Entorno de Desarrollo
-Para levantar el proyecto en modo desarrollo (con hot-reload y pgAdmin):
+La aplicación se comunica a través de puertos específicos para evitar conflictos:
 
-```bash
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
-```
+| Entorno | Componente | Puerto | URL Local |
+| :--- | :--- | :--- | :--- |
+| **Producción** | Frontend | 80 | `http://<IP_SERVIDOR>` |
+| **Producción** | Backend | 4000 | `http://<IP_SERVIDOR>:4000` |
+| **Desarrollo** | Frontend | 8080 | `http://<IP_SERVIDOR>:8080` |
+| **Desarrollo** | Backend | 3000 | `http://<IP_SERVIDOR>:3000` |
 
-- **Frontend**: http://localhost
-- **Backend API**: http://localhost/api
-- **pgAdmin**: http://localhost:8080 (Login: admin@admin.com / admin)
+## Gestión con PM2 (Ubuntu Server)
 
-## Entorno de Producción
-Para simular el entorno de producción (builds optimizados):
+Para mantener los procesos activos 24/7 en el servidor:
 
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d
+# Iniciar Producción
+cd backend
+node --env-file=.env.prod server.js # Prueba manual
+pm2 start server.js --name login-back-prod -- --env-file=.env.prod
+
+# Iniciar Desarrollo
+pm2 start server.js --name login-back-dev -- --env-file=.env.dev
 ```
 
-## Comandos Útiles
-- Ver logs: `docker-compose logs -f`
-- Detener todo: `docker-compose down`
-- Limpiar volúmenes (borra la BD): `docker-compose down -v`
+## Configuración de Base de Datos
 
----
+Se requieren dos bases de datos en el mismo servidor PostgreSQL:
 
-## 🔑 Configuración Manual (Sin Docker)
-Si vas a ejecutar el servidor directamente con `node server.js`, necesitas crear manualmente un archivo `.env` en la carpeta `backend/` con estos valores:
+1.  `death_cloud_prod`: Usuarios reales y datos críticos.
+2.  `death_cloud_dev`: Pruebas y experimentos.
 
-| Variable | Descripción | Valor sugerido |
-| :--- | :--- | :--- |
-| **DB_USER** | Usuario de PostgreSQL | `postgres` |
-| **DB_HOST** | Dirección del servidor | `localhost` |
-| **DB_NAME** | Nombre de la base de datos | `app_db` |
-| **DB_PASSWORD** | Tu contraseña de la BD | *(La que elegiste al instalar)* |
-| **DB_PORT** | Puerto de PostgreSQL | `5432` |
-| **PORT** | Puerto del Backend | `3000` |
+### Bypass de Contraseña (Solo para Demo)
+Si olvidaste la contraseña local, puedes editar el archivo `pg_hba.conf` y cambiar el método de autenticación de `scram-sha-256` a `trust` para las conexiones `127.0.0.1/32`.
 
-> **Nota:** El Frontend se conectará por defecto a `http://localhost:3000`.
+## Variables de Entorno (.env)
+
+Cada entorno lee su propio archivo:
+- `backend/.env.dev`
+- `backend/.env.prod`
+
+Asegúrate de que `DB_NAME` y `PORT` coincidan con la tabla de arriba.

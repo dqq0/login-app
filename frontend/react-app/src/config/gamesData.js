@@ -1,9 +1,9 @@
 export const games = [
   {
-    id: "death-cloud",
-    displayName: "Death Cloud",
+    id: "deathcloud-runner",
+    displayName: "DeathCloud Runner",
     tagline: "Un mundo. Un destino.",
-    subTagline: "Shape the Storm",
+    subTagline: "DeathCloud Runner",
     symbol: "DC",
     theme: {
       "theme-dark": "4 8 18",       // #040812
@@ -25,7 +25,7 @@ export const games = [
         id: "mount-01",
         title: "Montura Tiburón Mecánico",
         rarity: "Épico",
-        rarityColor: "text-[#c084fc]",
+        rarityColor: "text-theme-neon",
         description: "Surca los cielos de Death Cloud con esta imponente montura cibernética. Incluye efecto de rastro lumínico único.",
         image: "/assets/mech_shark.png",
         price: 800
@@ -34,16 +34,16 @@ export const games = [
     news: [
       {
         id: "news-1",
-        title: "Nuevo evento: Sombras Flotantes",
-        desc: "Enfréntate a nuevos desafíos élite.",
-        date: "15 May 2026",
+        title: "Torneo de Temporada: Death Cloud Cup",
+        desc: "Inscríbete con tu equipo y compite por un pozo acumulado de 50,000 E-Points.",
+        date: "Hace 2 horas",
         image: "/assets/hero_bg.png"
       },
       {
         id: "news-2",
         title: "Actualización 1.2.0",
         desc: "Nuevas armas legendarias y balance.",
-        date: "10 May 2026",
+        date: "Hace 1 día",
         image: "/assets/premium_axe.png"
       }
     ],
@@ -56,20 +56,20 @@ export const games = [
     ]
   },
   {
-    id: "skeleton-base",
-    displayName: "Platform Esqueleto",
-    tagline: "Motor Genérico",
-    subTagline: "Launcher Shell Mode",
-    symbol: "BASE",
+    id: "deathcloud-toxic-skies",
+    displayName: "DeathCloud Skies",
+    tagline: "Sobrevive la lluvia ácida.",
+    subTagline: "DeathCloud Toxic Skies",
+    symbol: "TS",
     theme: {
-      "theme-dark": "26 26 26", // #1a1a1a
-      "theme-gradient-start": "45 45 45", // #2d2d2d
-      "theme-panel": "rgba(40, 40, 40, 0.7)",
-      "theme-neon": "251 191 36", // fbbf24
-      "theme-neon-glow": "rgba(251, 191, 36, 0.5)",
-      "theme-text": "243 244 246", // #f3f4f6
-      "theme-muted": "156 163 175", // #9ca3af
-      "theme-success": "34 197 94" // #22c55e
+      "theme-dark": "4 18 8",       // Dark forest/toxic green-black
+      "theme-gradient-start": "13 42 20", // Deep forest green
+      "theme-panel": "rgba(10, 30, 15, 0.65)",
+      "theme-neon": "34 197 94",    // Green neon
+      "theme-neon-glow": "rgba(34, 197, 94, 0.5)",
+      "theme-text": "220 252 231",  // Light green-white
+      "theme-muted": "74 222 128",  // Muted green
+      "theme-success": "34 197 94"
     },
     assets: {
       heroBackground: "none",
@@ -78,27 +78,73 @@ export const games = [
     },
     store: [
       {
-        id: "placeholder-1",
-        title: "Placeholder Item",
-        rarity: "Común",
-        rarityColor: "text-theme-muted",
-        description: "Contenido no definido desde el backend de juegos.",
+        id: "toxic-skin-01",
+        title: "Traje de Filtro Tóxico Élite",
+        rarity: "Legendario",
+        rarityColor: "text-theme-neon",
+        description: "Traje con blindaje anticorrosión y máscara purificadora de neón verde.",
         image: "none",
-        price: 999
+        price: 1200
       }
     ],
     news: [
       {
-        id: "pnews-1",
-        title: "Sistema Desplegado",
-        desc: "El framework ha cargado eficientemente.",
-        date: "01 Ene 1970",
+        id: "toxic-news-1",
+        title: "Temporada Tóxica Desplegada",
+        desc: "El gas ha cubierto las zonas bajas. La altura otorga inmunidad temporal.",
+        date: "Hace 1 día",
         image: "none"
       }
     ],
     leaderboard: [
-      { rank: 1, name: "PlayerOne", score: "999", color: "text-theme-neon" },
-      { rank: 2, name: "PlayerTwo", score: "888", color: "text-theme-muted" }
+      { rank: 1, name: "BioHazard", score: "5,110", color: "text-theme-neon" },
+      { rank: 2, name: "ToxicoV", score: "4,820", color: "text-theme-muted" }
+    ]
+  },
+  {
+    id: "deathcloud-2d",
+    displayName: "DeathCloud 2D",
+    tagline: "Aventura retro en plataforma.",
+    subTagline: "DeathCloud 2D",
+    symbol: "2D",
+    theme: {
+      "theme-dark": "18 8 4",       // Dark orange/amber-black
+      "theme-gradient-start": "42 20 13", // Deep rust
+      "theme-panel": "rgba(30, 15, 10, 0.65)",
+      "theme-neon": "249 115 22",   // Orange neon
+      "theme-neon-glow": "rgba(249, 115, 22, 0.5)",
+      "theme-text": "255 237 213",  // Light orange-white
+      "theme-muted": "251 146 60",  // Muted orange
+      "theme-success": "34 197 94"
+    },
+    assets: {
+      heroBackground: "none",
+      storePrimaryItem: "not-found",
+      newsItem1: "not-found"
+    },
+    store: [
+      {
+        id: "retro-skin-01",
+        title: "Aspecto Retro Pixel 8-Bit",
+        rarity: "Raro",
+        rarityColor: "text-theme-neon",
+        description: "Transforma tu modelo 3D en un sprite pixelado clásico de los 80.",
+        image: "none",
+        price: 450
+      }
+    ],
+    news: [
+      {
+        id: "retro-news-1",
+        title: "Modo Arcade de Fin de Semana",
+        desc: "Vuelve a jugar con vidas limitadas y multiplicadores de puntuación.",
+        date: "Hace 3 días",
+        image: "none"
+      }
+    ],
+    leaderboard: [
+      { rank: 1, name: "PixelMaster", score: "8,990", color: "text-theme-neon" },
+      { rank: 2, name: "RetroJoe", score: "7,540", color: "text-theme-muted" }
     ]
   }
 ];

@@ -13,8 +13,8 @@
 
   body {
     @apply bg-theme-dark text-theme-text font-sans antialiased overflow-x-hidden transition-colors duration-500;
-    background-color: var(--theme-dark);
-    background-image: radial-gradient(circle at 50% 0%, var(--theme-gradient-start) 0%, var(--theme-dark) 70%);
+    background-color: rgb(var(--theme-dark));
+    background-image: radial-gradient(circle at 50% 0%, rgb(var(--theme-gradient-start)) 0%, rgb(var(--theme-dark)) 70%);
   }
 
   h1, h2, h3, h4, h5, h6 {
